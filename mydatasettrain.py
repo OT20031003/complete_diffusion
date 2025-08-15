@@ -49,10 +49,10 @@ def MNISTtraining(args, model, optimizer):
                 
             loss.backward()
             optimizer.step()
-    torch.save(model.state_dict(), 'smallmodel_weight.pth')
+    torch.save(model.state_dict(), 'smallmodel_weight2.pth')
 
                 
-def Training(model, optimizer):
+def Training(args, model, optimizer):
     model.train()
     dir_path = "./dataset" # dataset内のフォルダの画像
     epoch = 100
@@ -63,7 +63,7 @@ def Training(model, optimizer):
         for x in files_file:
             optimizer.zero_grad()
             print(x)
-            x_0 = SmallDDPM.load_image_as_tensor(dir_path + "/" +x)
+            x_0 = SmallDDPM.load_image_as_tensor(dir_path + "/" +x, clipdim=args.img_size)
             x_0 = x_0.unsqueeze(0)
             x_0 = x_0 * 2 - 1
             maxx = model.timesteps

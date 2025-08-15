@@ -59,13 +59,7 @@ def InferTest():
         # model.timesteps - 1 から 0 までループ
         tss = torch.tensor([model.timesteps])
         img2 = model.reverse_process(img, tss)
-        # for t in reversed(range(0, model.timesteps)):
-        #     # 現在のタイムステップをモデル入力用のテンソル形式に変換
-        #     timestep = torch.full((batch_size,), t, device=device, dtype=torch.long)
-            
-        #     # 1ステップ分のノイズ除去を実行し、画像を更新
-        #     img = model.reverse_onestep(img, timestep)
-    
+        
     print("Image generation complete.")
 
     # 5. 生成した画像を保存

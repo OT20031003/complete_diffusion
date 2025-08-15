@@ -13,11 +13,11 @@ def make_beta_schedule(timesteps, start_beta, end_beta):
         sch.append(a * t + start_beta)
     return sch  
 
-def load_image_as_tensor(image_path:str)->torch.Tensor:
+def load_image_as_tensor(image_path:str, clipdim=32)->torch.Tensor:
     try:
         pil_img = Image.open(image_path)
         # 256にクリップ
-        transform_clip = transforms.CenterCrop(32)
+        transform_clip = transforms.CenterCrop(clipdim)
         transform = transforms.ToTensor()
         tensor_img = transform(pil_img)
         tensor_img = transform_clip(tensor_img)
