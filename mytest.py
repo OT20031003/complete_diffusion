@@ -26,7 +26,7 @@ def InferTest():
     print(f"Using device: {device}")
 
     # 2. モデルのインスタンス化と学習済み重みのロード
-    model = SmallDDPM.GaussianDiffusion()
+    model = SmallDDPM.GaussianDiffusion(channel_size=1)
     
     # Training関数で保存されるファイル名 'model_weight.pth' を指定
     # map_location=device を使うことで、GPUがない環境でもGPUで学習したモデルを読み込める

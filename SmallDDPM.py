@@ -51,7 +51,8 @@ class GaussianDiffusion(Module):
             self, 
             timesteps = 500, 
             start_beta = 0.0001,
-            end_beta = 0.02
+            end_beta = 0.02, 
+            channel_size = 3
     ):
         super().__init__()
         self.beta_schedules = make_beta_schedule(timesteps, start_beta, end_beta)
@@ -68,7 +69,7 @@ class GaussianDiffusion(Module):
         self.register_buffer('betas', torch.tensor(self.beta_schedules))
         self.register_buffer('alphas', torch.tensor(self.alpha_schedules))
         self.register_buffer('alpha_bars', torch.tensor(self.alpha_bar_schedules))
-        self.unet = MnistUNet() # ここは白黒かどうかで分ける
+        self.unet = MnistUNet(inp_channel=channel_size) # ここは白黒かどうかで分ける
         self.timesteps = timesteps
         #print(type(self.schedule))
     

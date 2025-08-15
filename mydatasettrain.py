@@ -9,16 +9,17 @@ from embedingver import ResNet, Downsample, Upsample, UNet, SinusoidalPositionEm
 import os
 from torchvision.datasets import ImageFolder # ImageFolderをインポート
 import SmallDDPM
+import argparse
 
-def MNISTtraining(model, optimizer):
+def MNISTtraining(args, model, optimizer):
     model.train()
     transform = transforms.Compose([
-        transforms.Resize((32, 32)),  # <-- この行を追加
+        transforms.Resize((args.img_size, args.img_size)),  # <-- この行を追加
         transforms.ToTensor(), 
         #transforms.Normalize((0.5,), (0.5, ))
     ])
     train_dataset = datasets.MNIST(root='./MNISTdata', train=True, download=True, transform=transform)
-    batch_size = 16
+    batch_size = args.batch_size
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
     print(f"train dataset size = {len(train_dataset)}")
     num_epoch = 2
@@ -86,14 +87,21 @@ def Training(model, optimizer):
 
 
 
-def Training_test():
-    model = SmallDDPM.GaussianDiffusion()
-    optimizer = torch.optim.Adam(model.parameters(), lr = 0.00001)
-    MNISTtraining(model, optimizer)
+def Training_test(args):
+    model = SmallDDPM.GaussianDiffusion(channel_size=args.channel_num)
+    optimizer = torch.optim.Adam(model.parameters(), lr = 0.0001)
+    MNISTtraining(args, model, optimizer)
 
 
 def main():
     print("code execute!!")
-    Training_test()
+    parser = argparse.ArgumentParser(description='Diffusion Training')
+    parser.add_argument('--channel_num', type=int, help="dataset channel mnist->1", default=1)
+    parser.add_argument('--img_size', type=int, help='dataset size', default=32)
+    parser.add_argument('--batch_size', type=int, help='batch size', default=16)
+    args = parser.parse_args()
+    Training_test(args)
 
-main()
+if __name__ == '__main__':
+    main()
+# python mydatasettrain.py  --channel_num 1 --img_size 32 --batch_size 16  
