@@ -9,6 +9,7 @@ from embedingver import ResNet, Downsample, Upsample, UNet, SinusoidalPositionEm
 import os
 from torchvision.datasets import ImageFolder # ImageFolderをインポート
 import SmallDDPM
+import argparse
 
 
 
@@ -16,8 +17,7 @@ import SmallDDPM
 
 
 
-
-def InferTest():
+def InferTest(args):
     """
     学習済みモデルを使い、ノイズから画像を生成して保存する関数。
     """
@@ -26,7 +26,7 @@ def InferTest():
     print(f"Using device: {device}")
 
     # 2. モデルのインスタンス化と学習済み重みのロード
-    model = SmallDDPM.GaussianDiffusion(channel_size=1)
+    model = SmallDDPM.GaussianDiffusion(channel_size=args.channel_num)
     
     # Training関数で保存されるファイル名 'model_weight.pth' を指定
     # map_location=device を使うことで、GPUがない環境でもGPUで学習したモデルを読み込める
@@ -42,9 +42,9 @@ def InferTest():
 
     # 3. 画像生成の準備
     # Training時の画像サイズ（CenterCrop(256)）に合わせる
-    image_size = 32
-    channels = 1
-    batch_size = 1 # 一度に生成する画像の枚数
+    image_size = args.img_size
+    channels = args.channel_num
+    batch_size = args.batch_size # 一度に生成する画像の枚数
 
     # 4. 逆拡散プロセスによる画像生成
     print("Generating image from pure noise...")
@@ -78,8 +78,13 @@ def InferTest():
 
 def main():
     print("code execute!!")
-    # model = GaussianDiffusion()
-    # optimizer = torch.optim.Adam(model.parameters(), lr = 0.0001)
-    #Training_test()
-    InferTest()
-main()
+    parser = argparse.ArgumentParser(description="DIffusion")
+    parser.add_argument('--channel_num', type=int, help="dataset channel mnist->1", default=1)
+    parser.add_argument('--img_size', type=int, help='dataset size', default=32)
+    parser.add_argument('--batch_size', type=int, help='batch size', default=16)
+    args = parser.parse_args()
+    InferTest(args)
+
+if __name__ == '__main__':
+    main()
+# python mytest.py --channel_num 1 --img_size 32 --batch_size 1
