@@ -22,7 +22,7 @@ def MNISTtraining(args, model, optimizer):
     batch_size = args.batch_size
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=0)
     print(f"train dataset size = {len(train_dataset)}")
-    num_epoch = 2
+    num_epoch = 1
     criterion = torch.nn.MSELoss()
 
     for epoch in range(num_epoch):
